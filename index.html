@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#8a6d3b" />
+  <title>技工物管理ノート</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>技工物管理ノート</h1>
+    <p class="app-date" id="todayLabel"></p>
+  </header>
+
+  <nav class="tabbar" role="tablist">
+    <button class="tab is-active" data-view="top" role="tab">トップ</button>
+    <button class="tab" data-view="list" role="tab">一覧</button>
+    <button class="tab" data-view="form" role="tab">＋ 登録</button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ============ トップ画面 ============ -->
+    <section class="view" id="view-top">
+      <div class="summary-row">
+        <div class="summary-card summary-today">
+          <span class="summary-num" id="sumToday">0</span>
+          <span class="summary-label">今日の納品予定</span>
+        </div>
+        <div class="summary-card summary-overdue">
+          <span class="summary-num" id="sumOverdue">0</span>
+          <span class="summary-label">期限超過（未納品）</span>
+        </div>
+        <div class="summary-card summary-pending">
+          <span class="summary-num" id="sumPending">0</span>
+          <span class="summary-label">未納品 合計</span>
+        </div>
+      </div>
+
+      <h2 class="section-title">今日の納品予定</h2>
+      <div class="card-list" id="todayList"></div>
+
+      <h2 class="section-title section-title--warn">期限超過の未納品</h2>
+      <div class="card-list" id="overdueList"></div>
+    </section>
+
+    <!-- ============ 一覧画面 ============ -->
+    <section class="view is-hidden" id="view-list">
+      <div class="filters">
+        <div class="filter-field">
+          <label for="fPatient">患者名</label>
+          <input type="search" id="fPatient" placeholder="患者名で検索" />
+        </div>
+        <div class="filter-field">
+          <label for="fDue">納品予定日</label>
+          <input type="date" id="fDue" />
+        </div>
+        <div class="filter-field">
+          <label for="fStatus">状態</label>
+          <select id="fStatus">
+            <option value="all">すべて</option>
+            <option value="pending">未納品</option>
+            <option value="delivered">納品済み</option>
+            <option value="overdue">期限超過</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost" id="clearFilters">クリア</button>
+      </div>
+
+      <p class="result-count" id="resultCount"></p>
+      <div class="card-list" id="fullList"></div>
+    </section>
+
+    <!-- ============ 登録・編集画面 ============ -->
+    <section class="view is-hidden" id="view-form">
+      <form class="paper-form" id="workForm">
+        <input type="hidden" id="editId" />
+        <h2 class="section-title" id="formTitle">技工物の登録</h2>
+
+        <div class="form-field">
+          <label for="impressionDate">印象日</label>
+          <input type="date" id="impressionDate" required />
+        </div>
+
+        <div class="form-field">
+          <label for="patientName">患者名 <span class="req">*</span></label>
+          <input type="text" id="patientName" required placeholder="例）山田 太郎" />
+        </div>
+
+        <div class="form-field">
+          <label for="content">製作物内容</label>
+          <input type="text" id="content" placeholder="例）ジルコニアクラウン、ブリッジ" />
+        </div>
+
+        <fieldset class="form-field">
+          <legend>対象歯（歯式・Zsigmondy-Palmer方式）</legend>
+          <div class="tooth-mode" id="toothMode">
+            <button type="button" class="tm-btn is-active" data-mode="perm">永久歯（1〜8）</button>
+            <button type="button" class="tm-btn" data-mode="primary">乳歯（A〜E）</button>
+          </div>
+          <p class="tooth-help">該当する歯をタップして選択（もう一度で解除）</p>
+          <div class="tooth-chart" id="toothChart"></div>
+          <p class="tooth-selected" id="toothSelected">未選択</p>
+        </fieldset>
+
+        <fieldset class="form-field">
+          <legend>送るもの</legend>
+          <div class="checkbox-grid" id="sendItems">
+            <label><input type="checkbox" value="対合" /> 対合</label>
+            <label><input type="checkbox" value="バイト" /> バイト</label>
+            <label><input type="checkbox" value="トレー" /> トレー</label>
+            <label><input type="checkbox" value="参考模型" /> 参考模型</label>
+            <label><input type="checkbox" value="咬合器" /> 咬合器</label>
+            <label><input type="checkbox" value="その他" id="chkOther" /> その他</label>
+          </div>
+          <input type="text" id="sendOther" class="other-input is-hidden" placeholder="その他の内容" />
+        </fieldset>
+
+        <div class="form-field">
+          <label for="dueDate">納品予定日 <span class="req">*</span></label>
+          <input type="date" id="dueDate" required />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">登録する</button>
+          <button type="button" class="btn btn-ghost" id="cancelBtn">キャンセル</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
